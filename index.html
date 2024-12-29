@@ -3,79 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Rock-paper-scissors</title>
+    <title>Rock-paper-scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .buttons {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        #scoreboard {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
+    <h1>Rock-Paper-Scissors</h1>
+    <div class="buttons">
+        <button data-choice="Rock">Rock</button>
+        <button data-choice="Paper">Paper</button>
+        <button data-choice="Scissors">Scissors</button>
+    </div>
+    <div id="result"></div>
+    <div id="scoreboard">Player: 0 | Computer: 0</div>
+
     <script>
-        console.log("Hello, World!");
-    
-      
-const ROCK = "Rock";
-const PAPER = "Paper";
-const SCISSORS = "Scissors";
+        const ROCK = "Rock";
+        const PAPER = "Paper";
+        const SCISSORS = "Scissors";
 
+        let playerScore = 0;
+        let computerScore = 0;
 
-function getComputerChoice() {
-    const randomNumber = Math.floor(Math.random() * 3);
-    if (randomNumber === 0) return ROCK;
-    if (randomNumber === 1) return PAPER;
-    return SCISSORS;
-}
+        const resultDiv = document.getElementById('result');
+        const scoreboardDiv = document.getElementById('scoreboard');
 
-
-function playRound(playerSelection, computerSelection) {
-    
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
-
-    if (playerSelection === computerSelection) {
-        return "It's a tie!";
-    }
-
-    if (
-        (playerSelection === "rock" && computerSelection === "scissors") ||
-        (playerSelection === "scissors" && computerSelection === "paper") ||
-        (playerSelection === "paper" && computerSelection === "rock")
-    ) {
-        return "You win! " + playerSelection + " beats " + computerSelection;
-    } else {
-        return "You lose! " + computerSelection + " beats " + playerSelection;
-    }
-}
-
-
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
-
-    for (let i = 0; i < 5; i++) {
-        const playerSelection = prompt("Enter Rock, Paper, or Scissors:");
-        const computerSelection = getComputerChoice();
-        const result = playRound(playerSelection, computerSelection);
-
-        console.log(result);
-
-        
-        if (result.startsWith("You win")) {
-            playerScore++;
-        } else if (result.startsWith("You lose")) {
-            computerScore++;
+        function getComputerChoice() {
+            const choices = [ROCK, PAPER, SCISSORS];
+            return choices[Math.floor(Math.random() * choices.length)];
         }
-    }
 
-    
-    console.log(`Final Scores: Player - ${playerScore}, Computer - ${computerScore}`);
-    if (playerScore > computerScore) {
-        console.log("Congratulations! You are the overall winner.");
-    } else if (playerScore < computerScore) {
-        console.log("The computer wins the game!");
-    } else {
-        console.log("It's a draw overall!");
-    }
-}
+        function playRound(playerSelection, computerSelection) {
+            if (playerSelection === computerSelection) {
+                return `It's a tie! You both chose ${playerSelection}`;
+            }
 
-game();
-  
+            if (
+                (playerSelection === ROCK && computerSelection === SCISSORS) ||
+                (playerSelection === SCISSORS && computerSelection === PAPER) ||
+                (playerSelection === PAPER && computerSelection === ROCK)
+            ) {
+                playerScore++;
+                return `You win! ${playerSelection} beats ${computerSelection}`;
+            } else {
+                computerScore++;
+                return `You lose! ${computerSelection} beats ${playerSelection}`;
+            }
+        }
+
+        function updateScoreboard() {
+            scoreboardDiv.textContent = `Player: ${playerScore} | Computer: ${computerScore}`;
+        }
+
+        function handleButtonClick(e) {
+            const playerSelection = e.target.dataset.choice;
+            const computerSelection = getComputerChoice();
+            const result = playRound(playerSelection, computerSelection);
+
+            resultDiv.textContent = result;
+            updateScoreboard();
+        }
+
+        // Add event listeners to all buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', handleButtonClick);
+        });
     </script>
 </body>
 </html>
